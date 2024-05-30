@@ -5,28 +5,34 @@
 }
 
 body {
-  position: relative;
+  font-family: 'Kalam', cursive, 'Noto Sans TC', sans-serif;
   width: 100vw;
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
   margin: 0;
-  font-family: 'Kalam', cursive, 'Noto Sans TC', sans-serif;
 }
 
-body::before {
+.wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wrap::before {
   content: 'Goodbye WDD';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0) rotate(12deg);
   color: rgba(255, 255, 255, 0.05);
-  font-size: 15rem;
+  font-size: min(15rem, 12.5vw);
   white-space: nowrap;
   z-index: -1;
 }
 
-body::after {
+.wrap::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -34,62 +40,19 @@ body::after {
   z-index: -2;
 }
 
-/* loading */
-.loading {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 100;
-}
-
-.loading-snipper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loading-snipper > div {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto;
-  border-radius: 50%;
-  border-top-color: transparent;
-  border-left-color: transparent;
-  border-right-color: transparent;
-  box-shadow: 3px 3px 1px #fff;
-  animation: loading 690ms infinite linear;
-}
-
-@keyframes loading {
-  100% {
-    transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
 .login-box {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  opacity: 0;
+  transform: translate3d(-50%, calc(-50% + 50px), 0);
   max-width: 400px;
-  width: 100%;
+  width: calc(100% - 100px);
   padding: 40px 40px 30px;
   border: 2px solid #3a2d24;
   border-radius: 10px;
   background-color: rgba(197, 210, 219, 0.3);
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  filter: drop-shadow(4px 4px 10px rgba(0, 0, 0, 0.6));
   text-align: center;
   z-index: 2;
 }
@@ -166,14 +129,64 @@ body::after {
 }
 
 .login-box .login-btn {
+  position: relative;
   display: inline-block;
-  padding: 6px 10px;
-  background-color: #3a2d24;
+  min-width: 100px;
   border-radius: 5px;
-  color: #fff;
-  font-size: 20px;
-  margin-top: 30px;
+  padding: 6px 20px;
+  background-color: #8e796d;
+  box-shadow: 0px 8px #6d5b51;
+  transition: all 0.25s;
+  top: 0;
   cursor: pointer;
+  margin-top: 30px;
+}
+
+.login-box .login-btn::before {
+  content: 'Login';
+  color: #fff;
+  font-size: 18px;
+}
+
+.login-box .login-btn:active,
+.login-box .login-btn.active {
+  top: 4px;
+  box-shadow: 0px 4px #6d5b51;
+}
+
+.login-box .login-btn .loading-snipper {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+}
+
+.login-box .login-btn .loading-snipper > div {
+  width: 23px;
+  height: 23px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  box-shadow: 3px 3px 1px #fff;
+  animation: loading 690ms infinite linear;
+}
+
+.login-box .login-btn.logging::before {
+  content: '';
+}
+
+.login-box .login-btn.logging .loading-snipper {
+  display: flex;
+}
+
+.login-box .login-btn.logged::before {
+  content: 'Success';
+}
+
+.login-box .login-btn.logged .loading-snipper {
+  display: none;
 }
 
 .login-box .error-text {
@@ -191,7 +204,7 @@ body::after {
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
   max-width: 600px;
-  width: 100%;
+  width: 90%;
   height: 350px;
   background-color: #9f7c4c;
   opacity: 0;
@@ -206,14 +219,20 @@ body::after {
 
 .front.flap {
   width: 100%;
-  border-left: 300px solid transparent;
-  border-right: 300px solid transparent;
-  border-bottom: 0px solid transparent;
-  border-top: 215px solid #9f7c4c;
+  height: auto;
   filter: drop-shadow(1px 1px 6px rgba(0, 0, 0, 0.7));
   transform-origin: center top;
   pointer-events: none;
   z-index: 2;
+}
+
+.front.flap::after {
+  content: '';
+  display: block;
+  border-left: var(--w) solid transparent;
+  border-right: var(--w) solid transparent;
+  border-bottom: 0px solid transparent;
+  border-top: var(--h) solid #9f7c4c;
 }
 
 .front.pocket {
@@ -227,10 +246,10 @@ body::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-left: 300px solid #d2b083;
-  border-right: 300px solid #d2b083;
-  border-bottom: 175px solid #c7a67a;
-  border-top: 175px solid transparent;
+  border-left: var(--w) solid #d2b083;
+  border-right: var(--w) solid #d2b083;
+  border-bottom: var(--h) solid #c7a67a;
+  border-top: var(--h) solid transparent;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   filter: drop-shadow(1px 1px 6px rgba(0, 0, 0, 0.7));
@@ -259,9 +278,7 @@ body::after {
 .letter .content {
   position: relative;
   width: 100%;
-  padding: 30px 0;
-  mask-image: url(#fuzzy-border-mask);
-  mask-mode: alpha;
+  padding: 15px 0;
 }
 
 .letter .content p {
@@ -276,35 +293,18 @@ body::after {
 .letter .content p::before {
   content: '';
   position: absolute;
-  top: 5%;
+  top: 5px;
   right: 0;
   width: var(--w);
-  height: 90%;
+  height: calc(100% - 10px);
   border-radius: 4px;
   background-color: #dfdfdf;
-}
-
-.letter .content .border-blur {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.letter .content .border-blur rect {
-  x: -5px;
-  y: 30px;
-  width: calc(100% + 10px);
-  height: calc(100% - 70px);
-  height: 100%;
 }
 
 .letter .content .scroll-area {
   width: 100%;
   height: 100%;
-  max-height: calc(84vh - 213px);
+  max-height: calc(84vh - 164px);
   overflow: auto;
 }
 
@@ -314,10 +314,56 @@ body::after {
 
 .letter .start {
   font-size: 32px;
+  line-height: 1;
 }
 
 .letter .end {
   font-size: 26px;
   margin-left: auto;
   clip-path: polygon(0 0, 0% 0, 0% 100%, 0% 100%);
+}
+
+@keyframes loading {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .wrap::before {
+    font-size: 16vw;
+  }
+
+  .login-box {
+    padding: 40px 15px 30px;
+  }
+
+  .login-box .error-text {
+    font-size: 16px;
+  }
+
+  .login-box .login-btn {
+    margin-top: 20px;
+  }
+
+  .letter > .inner {
+    padding: 15px;
+  }
+
+  .letter .content {
+    padding: 5px 0 10px 0;
+  }
+
+  .letter .content .scroll-area {
+    max-height: calc(84vh - 108px);
+  }
+
+  .letter .start {
+    font-size: 28px;
+  }
+
+  .letter .end {
+    font-size: 22px;
+  }
 }

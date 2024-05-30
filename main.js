@@ -34,18 +34,8 @@ async function login(email, password) {
 
 function setDOM(data) {
   const dom = `
-    <div class="start">To <span class="name">${data.name}</span></div>
+    <div class="start">Dear <span class="name">${data.name}</span></div>
     <div class="content">
-      <svg class="border-blur" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id="blur" filterUnits="userSpaceOnUse">
-            <feGaussianBlur stdDeviation="10" />
-          </filter>
-          <mask id="fuzzy-border-mask">
-            <rect fill="black" filter="url(#blur)" />
-          </mask>
-        </defs>
-      </svg>
       <div class="scroll-area">
         <div class="inner">${data.content}</div>
       </div>
@@ -102,7 +92,7 @@ function envelopeAnimate() {
   const viewH = window.innerHeight;
   const envelopeFlapH = envelopeFlap.offsetHeight;
   const envelopeH = getEnvelopeSize().h + envelopeFlapH;
-  const letterInnerH = letterInner.clientHeight;
+  const letterInnerH = letterInner.clientHeight >= 0.84 * viewH ? 0.84 * viewH : letterInner.clientHeight;
   tl.to('.envelope', {
     duration: 0.5,
     opacity: 1,
@@ -110,7 +100,8 @@ function envelopeAnimate() {
   });
   tl.to('.envelope', {
     duration: 0.5,
-    top: envelopeH,
+    top: envelopeFlapH + 0.5 * viewH,
+    transform: `translate(-50%,${-0.5 * envelopeH}px)`,
   });
   tl.to('.envelope .front.flap', {
     duration: 0.8,
@@ -122,7 +113,7 @@ function envelopeAnimate() {
   tl.to('.envelope .letter', {
     duration: 0.8,
     ease: 'power1.out',
-    y: -letterInnerH - 15,
+    transform: `translate(-50%, ${-letterInnerH - 15}px)`,
     height: letterInnerH,
     onComplete: () => {
       letter.style.zIndex = 1;
@@ -131,8 +122,8 @@ function envelopeAnimate() {
   tl.to('.envelope .letter', {
     duration: 0.6,
     ease: 'power1.out',
-    top: -(viewH - envelopeH) / 2 - envelopeFlapH + 0.5 * viewH,
-    y: '-50%',
+    top: (viewH - letterInnerH) / 2,
+    transform: `translate(-50%, ${-(viewH - envelopeH) / 2 - envelopeFlapH}px)`,
   });
   tl.to('.envelope .letter .content p', {
     duration: 0.5,
@@ -157,36 +148,64 @@ function loginHandler() {
     errorText.style.display = 'block';
     return;
   }
-  gsap.to('.loading', {
-    duration: 0.3,
-    opacity: 1,
-  });
+  loginBtn.classList.add('logging');
   login(account, password)
     .then(userCredential => {
-      gsap.to('.loading', {
-        duration: 0.3,
-        opacity: 0,
-      });
+      loginBtn.classList.remove('logging');
+      loginBtn.classList.add('logged');
       loadData(userCredential.user.email);
     })
     .catch(error => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      gsap.to('.loading', {
-        duration: 0.3,
-        opacity: 0,
-        onComplete: () => {
-          errorText.textContent = '帳密有誤！還想偷看別人的阿';
-          errorText.style.display = 'block';
-        },
-      });
+      loginBtn.classList.remove('logging');
+      errorText.textContent = '帳密有誤！還想偷看別人的阿';
+      errorText.style.display = 'block';
     });
 }
 
+gsap.to('.login-box', {
+  duration: 0.5,
+  delay: 0.3,
+  opacity: 1,
+  transform: 'translate3d(-50%, -50%, 0)',
+});
+
+// 連線 firebase
 firebaseConnect();
+
+// EventListener
 loginBtn.addEventListener('click', loginHandler);
 window.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') {
     loginHandler();
   }
 });
+window.addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    loginBtn.classList.add('active');
+  }
+});
+window.addEventListener('keyup', function (e) {
+  if (e.key === 'Enter') {
+    loginBtn.classList.remove('active');
+  }
+});
+
+// Reset envelope size
+const resizeObserver = new ResizeObserver(entries => {
+  for (const entry of entries) {
+    const flap = entry.target.querySelector('.front.flap');
+    const pocket = entry.target.querySelector('.front.pocket');
+    const newWidth = getEnvelopeSize().w / 2;
+    const flapNewHeight = Math.round(newWidth * 0.71667);
+    const pocketNewHeight = Math.round(newWidth * 0.58333);
+    entry.target.style.height = pocketNewHeight * 2 + 'px';
+    flap.style.setProperty('--w', newWidth + 'px');
+    flap.style.setProperty('--h', flapNewHeight + 'px');
+    pocket.style.setProperty('--w', newWidth + 'px');
+    pocket.style.setProperty('--h', pocketNewHeight + 'px');
+  }
+});
+
+resizeObserver.observe(envelope);
