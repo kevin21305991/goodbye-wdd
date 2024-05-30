@@ -9,6 +9,7 @@ body {
   width: 100dvw;
   height: 100dvh;
   margin: 0;
+  background: -webkit-linear-gradient(192deg, #03263e 0%, #17466e 50%, #03263e 100%);
   background: linear-gradient(192deg, #03263e 0%, #17466e 50%, #03263e 100%);
   font-family: 'Kalam', cursive, 'Noto Sans TC', sans-serif;
 }
