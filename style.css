@@ -1,0 +1,314 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  width: 100dvw;
+  height: 100dvh;
+  margin: 0;
+  background: linear-gradient(192deg, rgba(3, 38, 62, 1) 0%, rgba(23, 70, 110, 1) 50%, rgba(3, 38, 62, 1) 100%);
+  font-family: 'Kalam', cursive, 'Noto Sans TC', sans-serif;
+}
+
+body::after {
+  content: 'Goodbye WDD';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0) rotate(12deg);
+  color: rgba(255, 255, 255, 0.05);
+  font-size: 15rem;
+  white-space: nowrap;
+  z-index: -1;
+}
+
+/* loading */
+.loading {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.loading-snipper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-snipper > div {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  box-shadow: 3px 3px 1px #fff;
+  animation: loading 690ms infinite linear;
+}
+
+@keyframes loading {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  max-width: 400px;
+  width: 100%;
+  padding: 40px 40px 30px;
+  border: 2px solid #3a2d24;
+  border-radius: 10px;
+  background-color: rgba(197, 210, 219, 0.3);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  z-index: 2;
+}
+
+.login-box::before {
+  content: '';
+  position: absolute;
+  top: -181px;
+  left: 5px;
+  aspect-ratio: 259/224;
+  width: 259px;
+  background: url('../img/otter.png') no-repeat center/contain;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-box::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  right: -98px;
+  aspect-ratio: 259/224;
+  width: 185px;
+  background: url('../img/otter2.png') no-repeat center/contain;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-box form {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.login-box .user-box {
+  position: relative;
+}
+
+.login-box .user-box:not(:first-child) {
+  margin-top: 30px;
+}
+
+.login-box .user-box input {
+  width: 100%;
+  padding: 15px 0 5px 0;
+
+  font-size: 20px;
+  color: #fff;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+.login-box .user-box input[type='password'] {
+  letter-spacing: 10px;
+}
+
+.login-box .user-box label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 10px;
+  color: #fff;
+  font-size: 24px;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.login-box .user-box input:focus ~ label,
+.login-box .user-box input:valid ~ label {
+  top: -26px;
+  font-size: 18px;
+}
+
+.login-box .login-btn {
+  display: inline-block;
+  padding: 6px 10px;
+  background-color: #3a2d24;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 20px;
+  margin-top: 30px;
+  cursor: pointer;
+}
+
+.login-box .error-text {
+  display: none;
+  color: #f97f7f;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.envelope {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  max-width: 600px;
+  width: 100%;
+  height: 350px;
+  background-color: #9f7c4c;
+  opacity: 0;
+  z-index: 1;
+}
+
+.front {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.front.flap {
+  width: 100%;
+  border-left: 300px solid transparent;
+  border-right: 300px solid transparent;
+  border-bottom: 0px solid transparent;
+  border-top: 215px solid #9f7c4c;
+  filter: drop-shadow(1px 1px 6px rgba(0, 0, 0, 0.7));
+  transform-origin: center top;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.front.pocket {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.front.pocket::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-left: 300px solid #d2b083;
+  border-right: 300px solid #d2b083;
+  border-bottom: 175px solid #c7a67a;
+  border-top: 175px solid transparent;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  filter: drop-shadow(1px 1px 6px rgba(0, 0, 0, 0.7));
+  z-index: 1;
+}
+
+.letter {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  width: 95%;
+  height: calc(100% - 16px);
+  background: url('../img/letter-background.jpg') no-repeat center/cover;
+  filter: drop-shadow(3px 3px 8px rgba(0, 0, 0, 0.5));
+  overflow: hidden;
+}
+
+.letter > .inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 30px;
+}
+
+.letter .content {
+  position: relative;
+  width: 100%;
+  padding: 30px 0;
+  mask-image: url(#fuzzy-border-mask);
+  mask-mode: alpha;
+}
+
+.letter .content p {
+  position: relative;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 18px;
+  line-height: 2;
+  margin: 0;
+  --w: 100%;
+}
+
+.letter .content p::before {
+  content: '';
+  position: absolute;
+  top: 5%;
+  right: 0;
+  width: var(--w);
+  height: 90%;
+  border-radius: 4px;
+  background-color: #dfdfdf;
+}
+
+.letter .content .border-blur {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.letter .content .border-blur rect {
+  x: -5px;
+  y: 30px;
+  width: calc(100% + 10px);
+  height: calc(100% - 70px);
+  height: 100%;
+}
+
+.letter .content .scroll-area {
+  width: 100%;
+  height: 100%;
+  max-height: calc(84vh - 213px);
+  overflow: auto;
+}
+
+.letter .content .scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.letter .start {
+  font-size: 32px;
+}
+
+.letter .end {
+  font-size: 26px;
+  margin-left: auto;
+  clip-path: polygon(0 0, 0% 0, 0% 100%, 0% 100%);
+}
