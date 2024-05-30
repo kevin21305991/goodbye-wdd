@@ -6,15 +6,15 @@
 
 body {
   position: relative;
+  width: 100vw;
   width: 100dvw;
+  height: 100vh;
   height: 100dvh;
   margin: 0;
-  background: -webkit-linear-gradient(192deg, #03263e 0%, #17466e 50%, #03263e 100%);
-  background: linear-gradient(192deg, #03263e 0%, #17466e 50%, #03263e 100%);
   font-family: 'Kalam', cursive, 'Noto Sans TC', sans-serif;
 }
 
-body::after {
+body::before {
   content: 'Goodbye WDD';
   position: absolute;
   top: 50%;
@@ -24,6 +24,14 @@ body::after {
   font-size: 15rem;
   white-space: nowrap;
   z-index: -1;
+}
+
+body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(192deg, #03263e 0%, #17466e 50%, #03263e 100%);
+  z-index: -2;
 }
 
 /* loading */
