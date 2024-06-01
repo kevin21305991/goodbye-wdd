@@ -360,7 +360,7 @@ body {
   max-height: calc(84vh - 164px);
   max-height: calc(84svh - 164px);
   overflow: auto;
-  overscroll-behavior: contain;
+  overscroll-behavior: none;
 }
 
 .letter .content .scroll-area::-webkit-scrollbar {
@@ -411,7 +411,7 @@ body {
   }
 
   .letter .content .scroll-area {
-    max-height: calc(84vh - 108px);
+    max-height: calc(84svh - 108px);
   }
 
   .letter .start {
