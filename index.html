@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Goodbye WDD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,13 +17,18 @@
       <div class="login-box">
         <form autocomplete="off">
           <div class="user-box">
-            <input type="text" name="account" value="" required>
+            <input type="text" name="account" inputmode="email" required>
             <label>Account</label>
           </div>
           <div class="user-box">
-            <input type="password" name="password" value="" required>
+            <input type="password" name="password" required>
             <label>Password</label>
           </div>
+          <label class="remember">
+            <p>Remember me</p>
+            <input type="checkbox" />
+            <div class="custom-checkbox"></div>
+          </label>
           <div class="error-text"></div>
           <div class="login-btn">
             <div class="loading-snipper">

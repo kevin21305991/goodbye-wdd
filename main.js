@@ -3,6 +3,9 @@ import { getDatabase, ref, set, update, push, child, onValue, get } from 'fireba
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { gsap } from 'gsap';
 
+const accountInput = document.querySelector('input[name="account"]');
+const passwordInput = document.querySelector('input[name="password"]');
+const rememberCheckbox = document.querySelector('.remember input[type="checkbox"]');
 const loginBtn = document.querySelector('.login-btn');
 const errorText = document.querySelector('.error-text');
 const envelope = document.querySelector('.envelope');
@@ -27,12 +30,22 @@ function firebaseConnect() {
   const app = initializeApp(firebaseConfig);
 }
 
-async function login(email, password) {
+/**
+ * firebase 登入
+ * @param {string} email 信箱
+ * @param {string} password 密碼
+ * @returns
+ */
+async function firebaseLogin(email, password) {
   const auth = getAuth();
   return signInWithEmailAndPassword(auth, email, password);
 }
 
-function setDOM(data) {
+/**
+ * 產生內容
+ * @param {object} data 資料物件
+ */
+function generateContent(data) {
   const dom = `
     <div class="start">Dear <span class="name">${data.name}</span></div>
     <div class="content">
@@ -45,6 +58,10 @@ function setDOM(data) {
   letterInner.innerHTML = dom;
 }
 
+/**
+ * 讀取 firebase 上的資料
+ * @param {string} email 信箱
+ */
 function loadData(email) {
   const db = getDatabase();
   const dbRef = ref(db, '/users/');
@@ -52,12 +69,16 @@ function loadData(email) {
     if (!snapshot.exists()) return;
     const AllData = Object.values(snapshot.val()).map(item => item);
     const data = AllData.find(item => item.account === email);
-    setDOM(data);
+    generateContent(data);
     const allAnimate = gsap.timeline();
     allAnimate.add(loginAnimate()).add(envelopeAnimate());
   });
 }
 
+/**
+ * 獲取信封尺寸
+ * @returns
+ */
 function getEnvelopeSize() {
   const w = envelope.clientWidth;
   const h = envelope.clientHeight;
@@ -67,6 +88,33 @@ function getEnvelopeSize() {
   };
 }
 
+/**
+ * 監聽信封尺寸變化
+ */
+function observeEnvelopeSize() {
+  // Reset envelope size
+  const resizeObserver = new ResizeObserver(entries => {
+    for (const entry of entries) {
+      const flap = entry.target.querySelector('.front.flap');
+      const pocket = entry.target.querySelector('.front.pocket');
+      const newWidth = getEnvelopeSize().w / 2;
+      const flapNewHeight = Math.round(newWidth * 0.71667);
+      const pocketNewHeight = Math.round(newWidth * 0.58333);
+      entry.target.style.height = pocketNewHeight * 2 + 'px';
+      flap.style.setProperty('--w', newWidth + 'px');
+      flap.style.setProperty('--h', flapNewHeight + 'px');
+      pocket.style.setProperty('--w', newWidth + 'px');
+      pocket.style.setProperty('--h', pocketNewHeight + 'px');
+    }
+  });
+
+  resizeObserver.observe(envelope);
+}
+
+/**
+ * 登入動畫
+ * @returns
+ */
 function loginAnimate() {
   const tl = gsap.timeline();
   tl.to('.login-box form', {
@@ -87,6 +135,10 @@ function loginAnimate() {
   return tl;
 }
 
+/**
+ * 信封打開動畫
+ * @returns
+ */
 function envelopeAnimate() {
   const tl = gsap.timeline();
   const viewH = window.innerHeight;
@@ -139,9 +191,30 @@ function envelopeAnimate() {
   return tl;
 }
 
+const localStorageHandler = {
+  get() {
+    return localStorage.getItem('login');
+  },
+  set() {
+    const account = btoa(accountInput.value.trim());
+    const password = btoa(passwordInput.value.trim());
+    const isRemember = rememberCheckbox.checked;
+    const info = {
+      account: isRemember ? account : '',
+      password: isRemember ? password : '',
+      isRemember,
+    };
+    localStorage.setItem('login', JSON.stringify(info));
+  },
+};
+
+/**
+ * 登入
+ * @returns
+ */
 function loginHandler() {
-  const account = document.querySelector('input[name="account"]').value;
-  const password = document.querySelector('input[name="password"]').value;
+  const account = accountInput.value.trim();
+  const password = passwordInput.value.trim();
   errorText.style.display = 'none';
   if (account === '' || password === '') {
     errorText.textContent = '請輸入帳號密碼';
@@ -149,63 +222,55 @@ function loginHandler() {
     return;
   }
   loginBtn.classList.add('logging');
-  login(account, password)
+  firebaseLogin(account, password)
     .then(userCredential => {
       loginBtn.classList.remove('logging');
       loginBtn.classList.add('logged');
+      localStorageHandler.set();
       loadData(userCredential.user.email);
     })
     .catch(error => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
       loginBtn.classList.remove('logging');
       errorText.textContent = '帳密有誤！還想偷看別人的阿';
       errorText.style.display = 'block';
     });
 }
 
-gsap.to('.login-box', {
-  duration: 0.5,
-  delay: 0.3,
-  opacity: 1,
-  transform: 'translate3d(-50%, -50%, 0)',
-});
+(function () {
+  // 連線 firebase
+  firebaseConnect();
 
-// 連線 firebase
-firebaseConnect();
+  gsap.to('.login-box', {
+    duration: 0.5,
+    delay: 0.3,
+    opacity: 1,
+    transform: 'translate3d(-50%, -50%, 0)',
+  });
 
-// EventListener
-loginBtn.addEventListener('click', loginHandler);
-window.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') {
-    loginHandler();
-  }
-});
-window.addEventListener('keypress', function (e) {
-  if (e.key === 'Enter') {
-    loginBtn.classList.add('active');
-  }
-});
-window.addEventListener('keyup', function (e) {
-  if (e.key === 'Enter') {
-    loginBtn.classList.remove('active');
-  }
-});
+  observeEnvelopeSize();
 
-// Reset envelope size
-const resizeObserver = new ResizeObserver(entries => {
-  for (const entry of entries) {
-    const flap = entry.target.querySelector('.front.flap');
-    const pocket = entry.target.querySelector('.front.pocket');
-    const newWidth = getEnvelopeSize().w / 2;
-    const flapNewHeight = Math.round(newWidth * 0.71667);
-    const pocketNewHeight = Math.round(newWidth * 0.58333);
-    entry.target.style.height = pocketNewHeight * 2 + 'px';
-    flap.style.setProperty('--w', newWidth + 'px');
-    flap.style.setProperty('--h', flapNewHeight + 'px');
-    pocket.style.setProperty('--w', newWidth + 'px');
-    pocket.style.setProperty('--h', pocketNewHeight + 'px');
+  if (localStorageHandler.get()) {
+    const { account, password, isRemember } = JSON.parse(localStorageHandler.get());
+    accountInput.value = atob(account);
+    passwordInput.value = atob(password);
+    rememberCheckbox.checked = isRemember;
   }
-});
 
-resizeObserver.observe(envelope);
+  // EventListener
+  loginBtn.addEventListener('click', loginHandler);
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      loginHandler();
+    }
+  });
+  window.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      loginBtn.classList.add('active');
+    }
+  });
+  window.addEventListener('keyup', function (e) {
+    if (e.key === 'Enter') {
+      loginBtn.classList.remove('active');
+    }
+  });
+})();
