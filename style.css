@@ -7,9 +7,8 @@
 body {
   font-family: 'Kalam', cursive, 'Noto Sans TC', sans-serif;
   width: 100vw;
-  width: 100dvw;
   height: 100vh;
-  height: 100dvh;
+  height: 100svh;
   margin: 0;
 }
 
@@ -359,7 +358,7 @@ body {
   width: 100%;
   height: 100%;
   max-height: calc(84vh - 164px);
-  max-height: calc(84dvh - 164px);
+  max-height: calc(84svh - 164px);
   overflow: auto;
   overscroll-behavior: contain;
 }
