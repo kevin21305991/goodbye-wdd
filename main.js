@@ -102,10 +102,9 @@ function loadData(email) {
       if (accountA > accountB) return 1;
       return 0;
     });
-    console.log(sortData);
-    const data = AllData.filter(item => item.account === email);
+    const data = sortData.filter(item => item.account === email);
     if (data.length === 0) {
-      generateContent(AllData);
+      generateContent(sortData);
     } else {
       generateContent(data);
     }
