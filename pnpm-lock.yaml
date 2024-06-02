@@ -11,6 +11,9 @@ dependencies:
   gsap:
     specifier: ^3.12.5
     version: 3.12.5
+  swiper:
+    specifier: ^11.1.4
+    version: 11.1.4
 
 devDependencies:
   vite:
@@ -1133,6 +1136,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       ansi-regex: 5.0.1
+    dev: false
+
+  /swiper@11.1.4:
+    resolution: {integrity: sha512-1n7kbYJB2dFEpUHRFszq7gys/ofIBrMNibwTiMvPHwneKND/t9kImnHt6CfGPScMHgI+dWMbGTycCKGMoOO1KA==}
+    engines: {node: '>= 4.7.0'}
     dev: false
 
   /tslib@2.6.2:

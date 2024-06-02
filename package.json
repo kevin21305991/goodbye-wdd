@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "firebase": "^10.12.2",
-    "gsap": "^3.12.5"
+    "gsap": "^3.12.5",
+    "swiper": "^11.1.4"
   }
 }

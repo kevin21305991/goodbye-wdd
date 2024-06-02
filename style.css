@@ -97,7 +97,6 @@ body {
 .login-box .user-box input {
   width: 100%;
   padding: 15px 0 5px 0;
-
   font-size: 20px;
   color: #e6e6e6;
   border: none;
@@ -322,9 +321,25 @@ body {
 }
 
 .letter > .inner {
+  width: 100%;
+}
+
+.letter > .inner .swiper {
+  --swiper-pagination-color: #8e796d;
+  --swiper-pagination-bottom: 11px;
+  --swiper-pagination-bullet-inactive-color: #8e796d;
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+}
+
+/* .letter > .inner .swiper .swiper-pagination {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+} */
+
+.letter > .inner .swiper-slide {
   display: flex;
   flex-direction: column;
-  width: 100%;
   padding: 30px;
 }
 
@@ -394,6 +409,14 @@ body {
     padding: 40px 15px 30px;
   }
 
+  .login-box .user-box input {
+    font-size: 18px;
+  }
+
+  .login-box .user-box input[type='password'] {
+    letter-spacing: 8px;
+  }
+
   .login-box .error-text {
     font-size: 16px;
   }
@@ -402,7 +425,7 @@ body {
     margin-top: 20px;
   }
 
-  .letter > .inner {
+  .letter > .inner .swiper-slide {
     padding: 15px;
   }
 
@@ -411,6 +434,7 @@ body {
   }
 
   .letter .content .scroll-area {
+    max-height: calc(84vh - 108px);
     max-height: calc(84svh - 108px);
   }
 
